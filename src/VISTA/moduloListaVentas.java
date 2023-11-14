@@ -1,52 +1,16 @@
 package VISTA;
 
-import DAO.ConexionSQL;
-import MODELO.Action.FiltrarDatos;
+import CONTROLADOR.ControladorListaVentas;
 import MODELO.UIDesinger.UIController;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import javax.swing.table.DefaultTableModel;
 
 public class moduloListaVentas extends javax.swing.JPanel {
 
-    Connection conexion;
-    PreparedStatement consulta;
-    ResultSet resultado;
-    DefaultTableModel modelo;
-    int filaSeleccionada = -1;
-    String idc;
+    private final ControladorListaVentas controlador;
 
     public moduloListaVentas() {
         initComponents();
-        consultaDatosVenta();
-        UIController.transparentarTxtField(txtDniTrabajador, txtDniCliente, txtMin, txtMax);
-        FiltrarDatos.setupTableSorting(tablaVentas);
-    }
-
-    private void consultaDatosVenta() {
-        try {
-            conexion = new ConexionSQL().conexion();
-            consulta = conexion.prepareStatement("SELECT * FROM venta");
-            resultado = consulta.executeQuery();
-
-            Object datos[] = new Object[5];
-            modelo = (DefaultTableModel) tablaVentas.getModel();
-            modelo.setRowCount(0);
-            while (resultado.next()) {
-                datos[0] = resultado.getString("idVenta");
-                datos[1] = resultado.getString("trabajador");
-                datos[2] = resultado.getString("cliente");
-                datos[3] = resultado.getDouble("total");
-                datos[4] = resultado.getDate("fecha");
-                modelo.addRow(datos);
-            }
-            tablaVentas.setModel(modelo);
-        } catch (SQLException e) {
-            System.out.println("ERROR: " + e.getMessage());
-        }
+        controlador = new ControladorListaVentas(this);
+        controlador.initDiseño();
     }
 
     @SuppressWarnings("unchecked")
@@ -125,9 +89,6 @@ public class moduloListaVentas extends javax.swing.JPanel {
         txtDniCliente.setForeground(new java.awt.Color(255, 255, 255));
         txtDniCliente.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtDniCliente.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtDniClienteKeyPressed(evt);
-            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtDniClienteKeyTyped(evt);
             }
@@ -147,9 +108,6 @@ public class moduloListaVentas extends javax.swing.JPanel {
         txtDniTrabajador.setForeground(new java.awt.Color(255, 255, 255));
         txtDniTrabajador.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtDniTrabajador.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtDniTrabajadorKeyPressed(evt);
-            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtDniTrabajadorKeyTyped(evt);
             }
@@ -173,9 +131,6 @@ public class moduloListaVentas extends javax.swing.JPanel {
         txtMin.setForeground(new java.awt.Color(255, 255, 255));
         txtMin.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtMin.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtMinKeyPressed(evt);
-            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtMinKeyTyped(evt);
             }
@@ -190,9 +145,6 @@ public class moduloListaVentas extends javax.swing.JPanel {
         txtMax.setForeground(new java.awt.Color(255, 255, 255));
         txtMax.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtMax.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtMaxKeyPressed(evt);
-            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtMaxKeyTyped(evt);
             }
@@ -230,11 +182,13 @@ public class moduloListaVentas extends javax.swing.JPanel {
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(txtMin, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
                         .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(txtMax, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
                         .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -300,80 +254,51 @@ public class moduloListaVentas extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    public static String codigoVenta;
-    public static String codigoEmpleado;
-    public static String codigoCliente;
-
     private void tablaVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaVentasMouseClicked
-        filaSeleccionada = tablaVentas.getSelectedRow();
-        if (evt.getClickCount() == 2) {
-            codigoVenta = tablaVentas.getValueAt(filaSeleccionada, 0).toString();
-            codigoEmpleado = tablaVentas.getValueAt(filaSeleccionada, 1).toString();
-            codigoCliente = tablaVentas.getValueAt(filaSeleccionada, 2).toString();
-            BoletaVenta abrir = new BoletaVenta();
-            abrir.setVisible(true);
-        }
+        controlador.tablaVentasMouseClicked(evt);
     }//GEN-LAST:event_tablaVentasMouseClicked
 
     private void txtDniTrabajadorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDniTrabajadorKeyTyped
         UIController.limitacionNumeros(txtDniTrabajador, evt, 8);
-        FiltrarDatos.filterAndPopulateTable(tablaVentas, txtDniTrabajador, txtDniCliente, txtMin, txtMax);
     }//GEN-LAST:event_txtDniTrabajadorKeyTyped
 
     private void txtDniClienteKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDniClienteKeyTyped
         UIController.limitacionNumeros(txtDniCliente, evt, 8);
-        FiltrarDatos.filterAndPopulateTable(tablaVentas, txtDniTrabajador, txtDniCliente, txtMin, txtMax);
     }//GEN-LAST:event_txtDniClienteKeyTyped
 
     private void txtMinKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMinKeyTyped
         UIController.limitacionNumeros(txtMin, evt, 10, '.');
-        FiltrarDatos.filterAndPopulateTable(tablaVentas, txtDniTrabajador, txtDniCliente, txtMin, txtMax);
     }//GEN-LAST:event_txtMinKeyTyped
 
     private void txtMaxKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMaxKeyTyped
         UIController.limitacionNumeros(txtMax, evt, 10, '.');
-        FiltrarDatos.filterAndPopulateTable(tablaVentas, txtDniTrabajador, txtDniCliente, txtMin, txtMax);
     }//GEN-LAST:event_txtMaxKeyTyped
-
-    private void txtDniTrabajadorKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDniTrabajadorKeyPressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtDniTrabajadorKeyPressed
-
-    private void txtDniClienteKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDniClienteKeyPressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtDniClienteKeyPressed
-
-    private void txtMinKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMinKeyPressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtMinKeyPressed
-
-    private void txtMaxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMaxKeyPressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtMaxKeyPressed
-
-
+    
+    public static String codigoVenta;
+    public static String codigoEmpleado;
+    public static String codigoCliente;
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel26;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JSeparator jSeparator3;
-    private javax.swing.JSeparator jSeparator4;
-    private MODELO.UIDesinger.TableDark tablaVentas;
-    private javax.swing.JTextField txtDniCliente;
-    private javax.swing.JTextField txtDniTrabajador;
-    private javax.swing.JTextField txtMax;
-    private javax.swing.JTextField txtMin;
+    public javax.swing.JLabel jLabel1;
+    public javax.swing.JLabel jLabel2;
+    public javax.swing.JLabel jLabel26;
+    public javax.swing.JLabel jLabel3;
+    public javax.swing.JLabel jLabel4;
+    public javax.swing.JLabel jLabel5;
+    public javax.swing.JPanel jPanel1;
+    public javax.swing.JPanel jPanel2;
+    public javax.swing.JPanel jPanel3;
+    public javax.swing.JPanel jPanel4;
+    public javax.swing.JPanel jPanel5;
+    public javax.swing.JPanel jPanel6;
+    public javax.swing.JScrollPane jScrollPane1;
+    public javax.swing.JSeparator jSeparator1;
+    public javax.swing.JSeparator jSeparator2;
+    public javax.swing.JSeparator jSeparator3;
+    public javax.swing.JSeparator jSeparator4;
+    public MODELO.UIDesinger.TableDark tablaVentas;
+    public javax.swing.JTextField txtDniCliente;
+    public javax.swing.JTextField txtDniTrabajador;
+    public javax.swing.JTextField txtMax;
+    public javax.swing.JTextField txtMin;
     // End of variables declaration//GEN-END:variables
 }

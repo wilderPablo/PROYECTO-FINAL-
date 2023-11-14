@@ -1,70 +1,15 @@
 package VISTA;
 
-import DAO.ConexionSQL;
-import DAO.ModeloDAO;
-import java.awt.Color;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import javax.swing.table.DefaultTableModel;
+import CONTROLADOR.ControladorBoletaVenta;
 
 public class BoletaVenta extends javax.swing.JFrame {
 
-    Connection conexion;
-    ResultSet resultado;
-    PreparedStatement consulta;
-    DefaultTableModel modelo;
-    String CodigoVenta = moduloListaVentas.codigoVenta;
-    String codigoEmpleado = moduloListaVentas.codigoEmpleado;
-    String codigoCliente = moduloListaVentas.codigoCliente;
-
-    String empleado = ModeloDAO.consultarDato("empleados", "dni", codigoEmpleado, "nombre", "String").toString() + " "
-            + ModeloDAO.consultarDato("empleados", "dni", codigoEmpleado, "apellido", "String").toString();
-
-    String nombreCliente = ModeloDAO.consultarDato("cliente", "dniCliente", codigoCliente, "nombre", "String").toString();
-    String apellidoCliente = ModeloDAO.consultarDato("cliente", "dniCliente", codigoCliente, "apellido", "String").toString();
-    String direccion = ModeloDAO.consultarDato("cliente", "dniCliente", codigoCliente, "direccion", "String").toString();
+    private final ControladorBoletaVenta controlador;
 
     public BoletaVenta() {
         initComponents();
-        this.setLocationRelativeTo(null);
-        this.setBackground(new Color(0, 0, 0, 0));
-        consultar(CodigoVenta);
-//        System.out.println(CodigoVenta);
-        double acum = 0;
-        for (int i = 0; i < tableDark1.getRowCount(); i++) {
-            acum = acum + Double.parseDouble(tableDark1.getValueAt(i, 3).toString());
-        }
-        txtTotal.setText("" + acum);
-    }
-
-    private void consultar(String codigoVenta) {
-        try {
-            conexion = new ConexionSQL().conexion();
-            consulta = conexion.prepareStatement("SELECT * FROM ventaProductos ventaP inner join productos prod on ventaP.codigoProducto = prod.codigoProducto WHERE idVenta=?");
-            consulta.setString(1, codigoVenta);
-            resultado = consulta.executeQuery();
-            Object datos[] = new Object[4];
-            modelo = (DefaultTableModel) tableDark1.getModel();
-            modelo.setRowCount(0);
-            while (resultado.next()) {
-                datos[0] = resultado.getString("nombre");
-                datos[1] = resultado.getDouble("precio");
-                datos[2] = resultado.getInt("cantidad");
-                datos[3] = resultado.getDouble("total");
-                modelo.addRow(datos);
-            }
-            txtNombreEmpleado.setText(empleado);
-
-            txtNombreCliente.setText(nombreCliente);
-            txtApellidoCliente.setText(apellidoCliente);
-            txtDireccionCliente.setText(direccion);
-
-            tableDark1.setModel(modelo);
-        } catch (SQLException e) {
-            System.out.println("ERROR: " + e.getMessage());
-        }
+        controlador = new ControladorBoletaVenta(this);
+        controlador.initDiseño();
     }
 
     @SuppressWarnings("unchecked")
@@ -194,18 +139,12 @@ public class BoletaVenta extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    int LayoutX;
-    int LayoutY;
     private void BarraTituloMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BarraTituloMouseDragged
-        this.setLocation(evt.getXOnScreen() - LayoutX, evt.getYOnScreen() - LayoutY);
+        controlador.BarraTituloMouseDragged(evt);
     }//GEN-LAST:event_BarraTituloMouseDragged
 
     private void BarraTituloMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BarraTituloMousePressed
-
-        if (evt.getButton() == java.awt.event.MouseEvent.BUTTON1) {
-            LayoutX = evt.getX();
-            LayoutY = evt.getY();
-        }
+        controlador.BarraTituloMousePressed(evt);
     }//GEN-LAST:event_BarraTituloMousePressed
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
@@ -229,15 +168,11 @@ public class BoletaVenta extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(BoletaVenta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(BoletaVenta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(BoletaVenta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(BoletaVenta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+
         //</editor-fold>
 
         /* Create and display the form */
@@ -247,18 +182,18 @@ public class BoletaVenta extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel BarraTitulo;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JScrollPane jScrollPane1;
-    private MODELO.UIDesinger.PanelRound panelRound6;
-    private MODELO.UIDesinger.TableDark tableDark1;
-    private javax.swing.JLabel txtApellidoCliente;
-    private javax.swing.JLabel txtDireccionCliente;
-    private javax.swing.JLabel txtNombreCliente;
-    private javax.swing.JLabel txtNombreEmpleado;
-    private javax.swing.JLabel txtTotal;
+    public javax.swing.JLabel BarraTitulo;
+    public javax.swing.JLabel jLabel23;
+    public javax.swing.JLabel jLabel24;
+    public javax.swing.JLabel jLabel27;
+    public javax.swing.JLabel jLabel5;
+    public javax.swing.JScrollPane jScrollPane1;
+    public MODELO.UIDesinger.PanelRound panelRound6;
+    public MODELO.UIDesinger.TableDark tableDark1;
+    public javax.swing.JLabel txtApellidoCliente;
+    public javax.swing.JLabel txtDireccionCliente;
+    public javax.swing.JLabel txtNombreCliente;
+    public javax.swing.JLabel txtNombreEmpleado;
+    public javax.swing.JLabel txtTotal;
     // End of variables declaration//GEN-END:variables
 }
