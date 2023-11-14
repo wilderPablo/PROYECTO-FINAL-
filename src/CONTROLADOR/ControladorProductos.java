@@ -2,6 +2,7 @@ package CONTROLADOR;
 
 import DAO.ConexionSQL;
 import MODELO.Action.ActionUtils;
+import MODELO.Action.FiltrarDatos;
 import MODELO.UIDesinger.UIController;
 import VISTA.moduloProductos;
 import java.awt.Cursor;
@@ -27,15 +28,15 @@ public class ControladorProductos {
 
     public ControladorProductos(moduloProductos p) {
         this.p = p;
-        initDiseño();
         mostrar();
     }
 
-    private void initDiseño() {
+    public void initDiseño() {
         initButton();
         if (ControladorFrmPrincipal.rango.equalsIgnoreCase("empleado")) {
             p.panelBotones.setVisible(false);
         }
+        FiltrarDatos.setupTableSorting(p.tablaProductos);
     }
 
     private void mostrar() {

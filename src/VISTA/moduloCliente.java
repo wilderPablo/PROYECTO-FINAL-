@@ -62,7 +62,7 @@ public final class moduloCliente extends javax.swing.JPanel {
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setText("Datos");
 
-        panelRound5.setBackground(new java.awt.Color(0, 93, 83));
+        panelRound5.setBackground(new java.awt.Color(0, 129, 93));
         panelRound5.setRoundBottomLeft(15);
         panelRound5.setRoundBottomRight(15);
         panelRound5.setRoundTopLeft(15);

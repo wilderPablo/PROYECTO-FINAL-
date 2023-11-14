@@ -2,6 +2,7 @@ package CONTROLADOR;
 
 import DAO.ConexionSQL;
 import MODELO.Action.ActionUtils;
+import MODELO.Action.FiltrarDatos;
 import MODELO.UIDesinger.UIController;
 import VISTA.moduloTrabajador;
 import java.awt.Cursor;
@@ -27,13 +28,13 @@ public class ControladorEmpleado {
 
     public ControladorEmpleado(moduloTrabajador t) {
         this.t = t;
-        initDiseño();
     }
 
-    private void initDiseño() {
+    public void initDiseño() {
         t.scrollDatos.getViewport().setOpaque(false);
         initButton();
         mostrar();
+        FiltrarDatos.setupTableSorting(t.tablaTrabajadores);
     }
 
     private void initButton() {

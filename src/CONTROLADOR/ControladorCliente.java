@@ -2,6 +2,7 @@ package CONTROLADOR;
 
 import DAO.ConexionSQL;
 import DAO.ModeloDAO;
+import MODELO.Action.FiltrarDatos;
 import MODELO.UIDesinger.UIController;
 import VISTA.moduloCliente;
 import java.sql.Connection;
@@ -32,6 +33,7 @@ public class ControladorCliente {
         cliente_consultar();
         clientesAutos = new ArrayList<>();
         rellenarArrayList();
+        FiltrarDatos.setupTableSorting(c.tablaCliente);
     }
 
     private void cliente_consultar() {

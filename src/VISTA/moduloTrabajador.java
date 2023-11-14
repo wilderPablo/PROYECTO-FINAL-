@@ -10,6 +10,7 @@ public class moduloTrabajador extends javax.swing.JPanel {
     public moduloTrabajador() {
         initComponents();
         controlador = new ControladorEmpleado(this);
+        controlador.initDiseño();
     }
 
     @SuppressWarnings("unchecked")

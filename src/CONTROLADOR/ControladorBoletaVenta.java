@@ -77,18 +77,16 @@ public class ControladorBoletaVenta {
 
     int LayoutX;
     int LayoutY;
-    
-    public void BarraTituloMouseDragged(java.awt.event.MouseEvent evt) {                                         
+
+    public void BarraTituloMouseDragged(java.awt.event.MouseEvent evt) {
         b.setLocation(evt.getXOnScreen() - LayoutX, evt.getYOnScreen() - LayoutY);
-    }                                        
-    
-    
-    public void BarraTituloMousePressed(java.awt.event.MouseEvent evt) {                                         
+    }
+
+    public void BarraTituloMousePressed(java.awt.event.MouseEvent evt) {
         if (evt.getButton() == java.awt.event.MouseEvent.BUTTON1) {
             LayoutX = evt.getX();
             LayoutY = evt.getY();
         }
-    }                                        
-    
-    
+    }
+
 }

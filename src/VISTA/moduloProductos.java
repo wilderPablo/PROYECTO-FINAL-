@@ -10,6 +10,7 @@ public class moduloProductos extends javax.swing.JPanel {
     public moduloProductos() {
         initComponents();
         controlador = new ControladorProductos(this);
+        controlador.initDiseño();
     }
 
     @SuppressWarnings("unchecked")
